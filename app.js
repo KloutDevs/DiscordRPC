@@ -34,13 +34,14 @@ app.on('ready', function(){
     window.on('ready-to-show', () => {
         window.show();
     });
-    ipcMain.handle('connect', (event, clientId, activityData) => {
-        let __connect = new Promise((resolve, reject) => {
+    ipcMain.handle('connect', async (event, clientId, activityData) => {
+        let __connect = new Promise(async (resolve, reject) => {
             try{
-                __rpcClient.login({clientId}).then(c => {
+                await __rpcClient.login({clientId}).then(c => {
                     resolve(c);
                 });
             }catch(e){
+                await sendNotification('An error occurred in the course of creating the activity: '+e.message);
                 let date = new Date().toLocaleString('es-ES', { timeZone: 'America/Argentina/Buenos_Aires' });
                 console.log(`[${date}] The application could not connect to the client.`);
                 console.log(`[${date}] The error simplified: ${e.message}`);
@@ -50,26 +51,31 @@ app.on('ready', function(){
             }
         });
         __connect.then(r => {
+            let time;
             if(r == 'Could not connect'){
-                return 'Could not connect';
+                time = 1000;
             }else if(r == 'connection closed'){
-                return 'connection closed';
+                time = 1000;
             }else if(r == 'RPC_CONNECTION_TIMEOUT'){
-                return 'RPC_CONNECTION_TIMEOUT';
+                time = 1000;
+            }else if(r == undefined){
+                time = 15000;
             }else{
-                let _register = new Promise((resolve, reject) => {
+                time = 1000;
+            }
+            setTimeout(function(){
+                let _register = new Promise(async (resolve, reject) => {
                     try{
-                        __rpcClient.setActivity({
-                            details: (activityData.details) ? activityData.details : '',
-                            state: (activityData.state) ? activityData.state : '',
-                            startTimestamp: (activityData.timestamp == true) ? new Date().getTime() : null,
-                            largeImageKey: (activityData.largeImageKey) ? activityData.largeImageKey : null,
-                            largeImageText: (activityData.largeImageText) ? activityData.largeImageText : null,
-                            smallImageKey: (activityData.smallImageKey) ? activityData.smallImageKey : null,
-                            smallImageText: (activityData.smallImageText) ? activityData.smallImageText : null,
-                            instance: false,
-                        });
-                        resolve(true);
+                        let x = {};
+                        for(const _d in activityData){
+                            if(activityData[_d].length > 2){
+                                x[_d] = activityData[_d];
+                            }else if(typeof activityData[_d] == 'number'){
+                                x.startTimestamp = new Date().getTime();
+                            }
+                        }
+                        await __rpcClient.setActivity(x)
+                        await sendNotification('The client was successfully connected, and the activity was recorded.');
                     }catch(e){
                         let date = new Date().toLocaleString('es-ES', { timeZone: 'America/Argentina/Buenos_Aires' });
                         console.log(`[${date}] The application could not register a new activity in the client.`);
@@ -85,15 +91,21 @@ app.on('ready', function(){
                 });
                 _register.then(_r => {
                     if(_r == true){
-                        return true;
+                        console.log(_r);
+                        return 'Succesfully';
                     }else{
+                        console.log(_r);
                         return _r.message;
                     }
                 });
-            }
+            }, time);
         });
     });
     ipcMain.handle('sendNotification', (event, message) => {
+        sendNotification(message);
+    });
+
+    function sendNotification(message){
         let notification = new Notification({
             title: 'DiscordRPC - Made by Klout',
             icon: './appIcon.png',
@@ -101,6 +113,6 @@ app.on('ready', function(){
         });
     
         notification.show();
-    });
+    }
 
 });
