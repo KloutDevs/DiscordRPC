@@ -1,18 +1,38 @@
 {
   "name": "discordrpc",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "DiscordRPC - Customize your perfil with a activity",
+  "author": "KloutDevs",
   "main": "app.js",
   "scripts": {
+    "postinstall": "install-app-deps",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
     "start": "electron app.js"
   },
-  "repository": "https://github.com/KloutDevs/DiscordRPC",
-  "author": "KloutDevs",
-  "license": "MIT",
-  "dependencies": {
-    "discord-rpc": "^3.1.4",
-    "electron": "^11.2.0",
-    "electron-reload": "^1.5.0"
+  "build": {
+    "appId": "com.klout.${name}",
+    "packageName": "DiscordRPC",
+    "asar": true,
+    "linux": {
+      "target": [
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "MSI",
+      "icon": "build/appIcon.ico"
+    }
   },
-  "url" : "https://github.com/KloutDevs/DiscordRPC/issues"
+  "repository": "https://github.com/KloutDevs/DiscordRPC",
+  "dependencies": {
+    "discord-rpc": "^3.1.4"
+  },
+  "url": "https://github.com/KloutDevs/DiscordRPC/issues",
+  "devDependencies": {
+    "electron": "^11.2.0",
+    "electron-reload": "^1.5.0",
+    "electron-builder": "^22.9.1"
+  }
 }
