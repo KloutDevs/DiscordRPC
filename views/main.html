@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<hmtl lang="en">
+    <head>
+        <meta charset="utf8">
+        <title>DiscordRPC - Set your custom activity</title>
+        <link rel="stylesheet" href="../public/css/main.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="bar drag titleBar">
+            <div class="title"> <img src="../appIcon.png"> <span style="font-size: 14px;" class="titleApp">Welcome</span></div>
+            <div class="right-btns">
+                <div class="no-drag pointer titlebar-btn" id="btn-minimize"> <i class="material-icons tiny" title="Minimize">remove</i> </div>
+                <div class="no-drag pointer titlebar-btn" id="btn-close"> <i class="material-icons tiny" title="Close">close</i> </div>
+            </div>
+        </div>
+        <div class="main">
+            <h1 class="title">Create your activity</h1>
+            <hr>
+            <form>
+                <input class="clientId" type="text" required="true" placeholder="Client ID">
+                <input class="details" type="text" required="true" placeholder="Details">
+                <input class="state" type="text" placeholder="State">
+                <input class="largeImageKey" type="text" placeholder="Large image key">
+                <input class="largeImageText" type="text" placeholder="Large Image Text">
+                <input class="smallImageKey" type="text" placeholder="Small Image Key">
+                <input class="smallImageText" type="text" placeholder="Small Image Text">
+                <label class="timestamp">
+                    <input type="checkbox">
+                    <span class="timestamp-checkbox"></span>
+                    <span class="timestamp-text">Start Timestamp</span>
+                </label>
+                <br>
+                <button class="connectButton">Start activity</button>
+            </form>
+        </div>
+
+        <script src="../public/js/main.js"></script>
+    </body>
+</hmtl>
